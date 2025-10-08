@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CSS Playground — RGB, Pseudo-classes, Box Model, Typography & More</title>
+
+  <!-- Google Fonts: using Inter (UI) and Lora (serif) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Lora:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+  /* ============================================
+     Base / Reset
+     ============================================ */
+  :root{
+    --ui: 16px; /* base size */
+    --accent-rgb: 255,99,71; /* tomato RGB for demonstration */
+    --accent-h: 9 100% 64%; /* for hsla demo */
+    --surface: 255,255,255;
+  }
+
+  /* Box sizing makes layout math easier */
+  *,*::before,*::after { box-sizing: border-box; }
+
+  body{
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    margin: 18px;
+    line-height: 1.4;
+    color: #111;
+    background: linear-gradient(180deg, #f6f8fb 0%, #ffffff 100%);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  h1 { font-size: 1.6rem; margin-bottom:0.25rem; }
+  h2 { font-size: 1.05rem; margin: 1rem 0 0.5rem; color:#333; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    align-items: start;
+  }
+
+  .card {
+    background: white;
+    border-radius: 12px;            /* border-radius shorthand demonstration */
+    padding: 14px;
+    box-shadow: 0 8px 20px rgba(16, 24, 40, 0.06); /* box-shadow example */
+    border: 1px solid rgba(141, 199, 209, 0.04);
+  }
+
+  .card h3 {  
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-family: "Lora", Georgia, serif; /* fallback stack example */
+    font-weight: 700;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.6); /* text-shadow */
+  }
+
+  small.note { display:block; color: #666; margin-bottom:8px; }
+
+  /* ============================================
+     Colors: RGB / RGBA / HSLA
+     ============================================ */
+  .swatch {
+    height: 48px;
+    border-radius: 8px;
+    display:flex; align-items:center; justify-content:center;
+    color:white; font-weight:600;
+    margin-bottom:8px;
+  }
+  .swatch.rgb { background: rgb(var(--accent-rgb)); }      /* rgb(...) */
+  .swatch.rgba { background: rgba(var(--accent-rgb), 0.85); } /* rgba(...) */
+  .swatch.hsla { background: hsla(var(--accent-h), 0.9); }  /* hsla(...) */
+
+  /* ============================================
+     Display values
+     ============================================ */
+  .display-demo { padding:10px; border-radius:8px; background:#f3f6fb; }
+  .display-demo .block { display:block; background:#fff; padding:6px; margin-bottom:6px; }
+  .display-demo .inline { display:inline; background:#e6f0ff; padding:3px 6px; border-radius:4px; }
+  .display-demo .inline-block { display:inline-block; width:140px; background:#fff; padding:8px; border-radius:6px; margin-top:6px; }
+  .display-demo .hidden { display:none; } /* used to demonstrate display:none - you won't see it */
+
+  /* ============================================
+     Overflow demo
+     ============================================ */
+  .overflow-row { display:flex; gap:8px; }
+  .overflow-box { width:100%; max-width:200px; height:120px; background:#fff; padding:8px; border-radius:8px; border:1px solid rgba(0,0,0,0.06); overflow:auto; }
+  .overflow-box.hidden { overflow:hidden; }
+  .overflow-box.scroll { overflow:scroll; }
+  .overflow-box.auto { overflow:auto; }
+
+  /* Long text inside to cause overflow */
+  .overflow-text { width:240px; }
+
+  /* ============================================
+     Typography: sizes, responsive, letter-spacing, etc.
+     ============================================ */
+  p.lead{
+    font-size: clamp(1rem, 1rem + 1.0vw, 1.25rem); /* responsive typography using clamp + relative units */
+    line-height: 1.6;
+    letter-spacing: 0.2px;
+  }
+
+  .caps { text-transform: uppercase; letter-spacing: 1.1px; font-weight:600; }
+
+  /* Web-font via @font-face: Example (commented) 
+     To use @font-face, uncomment and provide actual font files in 'fonts/' folder.
+  @font-face {
+    font-family: 'MyLocalFont';
+    src: url('fonts/MyLocalFont.woff2') format('woff2');
+    font-weight: 400 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  */
+
+  /* ============================================
+     nth-child / pseudo-classes
+     ============================================ */
+  ul.demo-list { padding-left:16px; margin:0; }
+  ul.demo-list li { margin:6px 0; padding:6px 8px; border-radius:6px; background:#fff; border:1px solid rgba(0,0,0,0.04); }
+
+  /* nth-child: style odd/even/3rd item */
+  ul.demo-list li:nth-child(odd) { background: linear-gradient(90deg,#fbfbff,#f6fbff); }
+  ul.demo-list li:nth-child(even) { background: linear-gradient(90deg,#fffdf6,#fff8f0); }
+  ul.demo-list li:nth-child(3) { font-weight:700; color: #9b2c2c; }
+
+  /* Pseudo-classes on inputs/buttons */
+  .controls input[type="text"]{
+    padding:8px 10px; border-radius:8px; border:1px solid rgba(16,24,40,0.08);
+    transition: box-shadow .18s ease, transform .12s ease;
+  }
+  .controls input[type="text"]:focus {
+    outline: none;
+    box-shadow: 0 6px 18px rgba(59,130,246,0.12);
+    transform: translateY(-1px); /* small transform, also creates stacking context if needed */
+  }
+
+  .btn {
+    display:inline-block; padding:10px 14px; border-radius:10px; cursor:pointer;
+    background: linear-gradient(180deg, rgb(var(--accent-rgb)), rgb(200,60,30));
+    color:white; border:none; font-weight:600; box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    user-select:none; transition: transform .12s ease, filter .12s ease;
+  }
+  .btn:hover { transform: translateY(-3px); filter:brightness(1.05); } /* :hover */
+  .btn:active { transform: translateY(0); } /* :active */
+  .btn:disabled {
+    opacity: 0.48; cursor: not-allowed; filter: grayscale(.2);
+  }
+
+  /* ============================================
+     z-index / stacking context
+     ============================================ */
+  .stack {
+    position: relative;
+    height:140px;
+    display:flex; align-items:center; justify-content:center;
+    gap:12px;
+    background:linear-gradient(180deg,#fafafa,#fff);
+    border-radius:10px; padding:12px; border:1px dashed rgba(0,0,0,0.04);
+  }
+
+  .stack .box{
+    width:80px; height:80px; border-radius:12px; display:flex;align-items:center;justify-content:center;color:white;font-weight:700; position:relative;
+  }
+  .box.a { background: rgba(59,130,246,0.95); z-index:10; transform: translateY(6px); } /* z-index applied */
+  .box.b { background: rgba(16,185,129,0.95); z-index:5; } /* lower z-index */
+  .box.c { background: rgba(234,88,12,0.95); z-index:7; opacity:0.95; transform: translateY(-6px); } 
+  /* Note: transforms and opacity can create new stacking contexts in modern browsers; that's demonstrated by transform on .a and .c */
+
+  /* ============================================
+     Aspect ratio
+     ============================================ */
+  .ratio-box {
+    background: linear-gradient(135deg,#e6f7ff,#fff0f0);
+    border-radius:10px; overflow:hidden;
+  }
+  .ratio-box .inner {
+    aspect-ratio: 16/9; /* the aspect-ratio property */
+    background-image: linear-gradient(135deg, rgba(59,130,246,0.12), rgba(234,88,12,0.12));
+    display:flex; align-items:center; justify-content:center; font-weight:600;
+  }
+
+  /* ============================================
+     Misc: opacity, text style
+     ============================================ */
+  .overlay {
+    background: linear-gradient(180deg, rgba(0,0,0,0.04), rgba(0,0,0,0.02));
+    border-radius:8px; padding:10px;
+  }
+
+  /* small responsive tweak */
+  @media (max-width:520px){
+    body{ margin:10px; }
+  }
+  </style>
+</head>
+<body>
+
+  <header style="display:flex;gap:12px;align-items:center; margin-bottom:12px;">
+    <div style="width:48px;height:48px;border-radius:10px; background:linear-gradient(180deg, rgb(var(--accent-rgb)), #b53a24); box-shadow:0 8px 20px rgba(0,0,0,0.12);"></div>
+    <div>
+      <h1>CSS Playground — Practical Demos</h1>
+      <small class="note">Try: hover elements, tab into inputs, resize the window to see responsive typography, inspect with DevTools.</small>
+    </div>
+  </header>
+
+  <main class="grid">
+
+    <!-- COLORS -->
+    <section class="card">
+      <h3>Colors — RGB / RGBA / HSLA</h3>
+      <div class="swatch rgb">rgb(255,99,71)</div>
+      <div class="swatch rgba">rgba(255,99,71,0.85)</div>
+      <div class="swatch hsla">hsla( var(--accent-h) )</div>
+      <small class="note">Use <code>rgb()</code>, <code>rgba()</code> and <code>hsla()</code> for color and transparency control.</small>
+    </section>
+
+    <!-- DISPLAY -->
+    <section class="card">
+      <h3>Display Values</h3>
+      <div class="display-demo">
+        <div class="block">I'm <strong>block</strong> (takes full width)</div>
+        <span class="inline">I'm inline</span>
+        <div class="inline-block">I'm inline-block (can set width)</div>
+        <!-- .hidden exists but is not visible because display:none -->
+        <div class="hidden">You cannot see me (display:none)</div>
+      </div>
+      <small class="note">Inline flows in text, block breaks line, inline-block behaves like an inline box you can size. `display:none` removes element from layout/flow.</small>
+    </section>
+
+    <!-- BOX-SIZING & TYPOGRAPHY -->
+    <section class="card">
+      <h3>box-sizing & Typography</h3>
+      <p class="lead">This paragraph demonstrates responsive type using <code>clamp()</code> and relative units (rem, vw). It uses a fallback font stack and the Inter web font loaded from Google Fonts above.</p>
+
+      <div style="margin-top:10px;">
+        <p style="font-size:0.9rem; letter-spacing:0.8px;">Font stack example: <code>font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;</code></p>
+      </div>
+    </section>
+
+    <!-- OVERFLOW -->
+    <section class="card">
+      <h3>Overflow Handling</h3>
+      <div class="overflow-row">
+        <div class="overflow-box hidden">
+          <div class="overflow-text">
+            This box uses <code>overflow:hidden</code>. The content that doesn't fit is clipped and cannot be scrolled. Try resizing to smaller width.
+          </div>
+        </div>
+
+        <div class="overflow-box scroll">
+          <div class="overflow-text">
+            This one uses <code>overflow:scroll</code>. Scrollbars are always present (even if not needed).
+          </div>
+        </div>
+
+        <div class="overflow-box auto">
+          <div class="overflow-text">
+            This one uses <code>overflow:auto</code>. Scrollbars appear only when necessary.
+          </div>
+        </div>
+      </div>
+      <small class="note">Overflow controls what happens when content is larger than the box.</small>
+    </section>
+
+    <!-- PSEUDO-CLASSES & NTH-CHILD -->
+    <section class="card">
+      <h3>Pseudo-classes & :nth-child()</h3>
+      <ul class="demo-list">
+        <li>First item</li>
+        <li>Second item</li>
+        <li>Third item (styled by <code>:nth-child(3)</code>)</li>
+        <li>Fourth item</li>
+        <li>Fifth item</li>
+      </ul>
+
+      <div style="margin-top:10px;" class="controls">
+        <label class="caps">Focus the input (tab) to see :focus</label><br>
+        <input type="text" placeholder="Tab to me or click me" />
+        <div style="margin-top:10px;">
+          <button class="btn">Normal button</button>
+          <button class="btn" disabled>Disabled button (:disabled)</button>
+        </div>
+        <small class="note">Try: hover buttons, click (:active), and tab into the input to see <code>:focus</code>.</small>
+      </div>
+    </section>
+
+    <!-- BOX-SHADOW / TEXT-SHADOW / BORDER-RADIUS -->
+    <section class="card">
+      <h3>Shadows, Radius & Opacity</h3>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <div style="width:140px;">
+          <div style="background:white;border-radius:12px;padding:12px;box-shadow:0 12px 30px rgba(16,24,40,0.08);">
+            <div style="font-weight:700;text-shadow:0 1px 0 rgba(255,255,255,0.6);">Card</div>
+            <div style="color:#666;font-size:0.9rem;">Box shadow + radius</div>
+          </div>
+        </div>
+
+        <div style="width:140px;">
+          <div style="background:rgba(59,130,246,0.92); color:white; padding:12px; border-radius:10px; opacity:0.95;">
+            <div style="font-weight:700;">Opacity</div>
+            <div style="font-size:0.9rem;">rgba / hsla allow alpha control</div>
+          </div>
+        </div>
+      </div>
+      <small class="note">Use RGBA/HSLA for semi-transparent backgrounds/overlays; <code>opacity</code> affects the whole element (including children).</small>
+    </section>
+
+    <!-- Z-INDEX stacking -->
+    <section class="card">
+      <h3>z-index & Stacking Contexts</h3>
+      <div class="stack">
+        <div class="box a">A (z:10)</div>
+        <div class="box b">B (z:5)</div>
+        <div class="box c">C (z:7)</div>
+      </div>
+      <small class="note">Transforms or opacity can create new stacking contexts. Try removing transform in DevTools to see different layering behavior.</small>
+    </section>
+
+    <!-- Aspect Ratio -->
+    <section class="card">
+      <h3>Aspect Ratio</h3>
+      <div class="ratio-box">
+        <div class="inner">16:9 Box (aspect-ratio)</div>
+      </div>
+      <small class="note">`aspect-ratio` makes it easy to keep elements proportionate without padding hacks.</small>
+    </section>
+
+  </main>
+
+  <footer style="margin-top:18px; color:#555;">
+    <small>Notes: This file uses modern CSS (clamp, aspect-ratio, transforms). Works best in modern browsers. Replace or add @font-face with real files if you want to bundle local fonts.</small>
+  </footer>
+
+</body>
+</html>
+  
